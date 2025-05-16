@@ -21,6 +21,35 @@ document.getElementById("submit").addEventListener("click",async function(){
         console.log(error);
     }
 });
+document.getElementById("currentLocation").addEventListener("click",async function(){
+    const containerChild = document.getElementById("weatherDisplay");
+    if (containerChild) {
+        while (containerChild.firstChild) {
+            containerChild.removeChild(containerChild.firstChild);
+        }
+    }
+    const apiKey = "90930fa161303e19b2e7c87ff23f8e74";
+    if("geolocation" in navigator){
+        navigator.geolocation.getCurrentPosition(async(position)=>{
+          const  latitude =  position.coords.latitude;
+          const  longitude = position.coords.longitude;
+          try{
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`);
+                const weatherData = await response.json();
+                display(weatherData);
+            }
+            catch(error){
+                console.log(error);
+            }
+        },
+    (error)=>{
+        console.log("Error otaining loaction", error);
+    });
+    }
+    else{
+        console.log("Geolocation is not supported by the browser");
+    }
+});
 
 function display(weatherData){
     let fiveDayForecast = weatherData.list;
@@ -45,10 +74,10 @@ function display(weatherData){
             date.innerHTML = dateValue;
             image.src=`https://openweathermap.org/img/wn/${iconValue}@2x.png`;
             image.alt=`${weatherDescriptionValue}`;
-            temprature.innerHTML = temperatureValue;
+            temprature.innerHTML = `Temperature : ${temperatureValue}&#8451`;
             weather.innerHTML = weatherValue;
-            wind.innerHTML = windValue;
-            humidity.innerHTML = humidityValue;
+            wind.innerHTML = `Wind : ${windValue}m/s`;
+            humidity.innerHTML =`Humidity : ${humidityValue}%`;
             card.appendChild(date);
             card.appendChild(image);
             card.appendChild(weather);
