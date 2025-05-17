@@ -20,4 +20,4 @@ OpenWeatherMap API
 Local Storage API
 API Integration
 
-Weather data is retrieved using the OpenWeatherMap API.
+Weather data is retrieved using the OpenWeatherMap API https://openweathermap.org/forecast5.
