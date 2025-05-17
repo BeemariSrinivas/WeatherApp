@@ -1,7 +1,7 @@
 document.getElementById("form").addEventListener("submit",function(event){
     event.preventDefault();
 });
-
+/* getting previous searched cities from local storage and saving it into an array*/
 let saved = [];
 const searchedCities = localStorage.getItem("searches");
 if(searchedCities!==null){
@@ -15,7 +15,7 @@ else{
     saved = [];
 }
 
-
+/*Getting previous searched cities from local storage on load and displaying on dropdown*/
 
 window.onload = () => {
   if (saved.length > 0) {
@@ -29,7 +29,7 @@ window.onload = () => {
   }
 };
 
-
+/*searches weather data by city name typed in input filed*/
 
 document.getElementById("submit").addEventListener("click",async function(){
     clear();
@@ -72,6 +72,9 @@ document.getElementById("submit").addEventListener("click",async function(){
         }
     }
 });
+
+/*searches weather data by using current location*/
+
 document.getElementById("currentLocation").addEventListener("click",async function(){
     clear();
     const apiKey = "90930fa161303e19b2e7c87ff23f8e74";
@@ -104,6 +107,8 @@ document.getElementById("currentLocation").addEventListener("click",async functi
     }
 });
 
+/* searches weather data by previous searched cities displayed in the dropdown*/
+
 document.getElementById("options").addEventListener("change",async function(event){
     clear();
     const city = event.target.value;
@@ -120,6 +125,8 @@ document.getElementById("options").addEventListener("change",async function(even
         }
 });
 
+/*clear previously displayed data*/
+
 function clear(){
     const containerChild = document.getElementById("weatherDisplay");
     if (containerChild) {
@@ -130,8 +137,12 @@ function clear(){
 }
 
 
+/*displays weather data on screen*/
+
 function display(weatherData){
     let fiveDayForecast = weatherData.list;
+    let cityName = weatherData.city.name;
+    console.log(cityName);
         fiveDayForecast = fiveDayForecast.filter((ele,index)=>index%8===0);
         console.log(fiveDayForecast);
         const container = document.createElement("div");
@@ -144,34 +155,43 @@ function display(weatherData){
             let iconValue = element.weather[0].icon;
             let windValue = element.wind.speed;
             let humidityValue = element.main.humidity;
+            let pressureValue = element.main.pressure;
             const card = document.createElement("div");
+            const city = document.createElement("p");
+            city.innerHTML = cityName;
+            city.className = "font-bold text-6xl";
             let today = new Date();
             let todayDate = today.toISOString().split("T")[0];
             if (dateValue === todayDate) {
+                card.appendChild(city);
                 card.className = "bg-blue-200 my-2 p-3 md:col-span-2 lg:col-span-4";
             }
             else{
-                card.className = "my-2 p-3 bg-slate-200 md:m-2";
+                card.className = "my-1 p-3 bg-slate-200 md:m-2";
             }
             const date = document.createElement("p");
             const image = document.createElement("img");
             const temprature = document.createElement("p");
             const weather = document.createElement("p");
+            weather.className = "font-bold text-2xl";
             const wind = document.createElement("p");
             const humidity = document.createElement("p");
+            const pressure = document.createElement("p");
             date.innerHTML = dateValue;
             image.src=`https://openweathermap.org/img/wn/${iconValue}@2x.png`;
             image.alt=`${weatherDescriptionValue}`;
             temprature.innerHTML = `Temperature : ${temperatureValue}&#8451`;
             weather.innerHTML = weatherValue;
-            wind.innerHTML = `Wind : ${windValue}m/s`;
+            wind.innerHTML = `Wind Speed : ${windValue}m/s`;
             humidity.innerHTML =`Humidity : ${humidityValue}%`;
+            pressure.innerHTML = `Pressure : ${pressureValue}Pa`;
             card.appendChild(date);
             card.appendChild(image);
             card.appendChild(weather);
             card.appendChild(temprature);
             card.appendChild(wind);
             card.appendChild(humidity);
+            card.appendChild(pressure);
             container.appendChild(card);
         });
         document.getElementById("weatherDisplay").append(container);

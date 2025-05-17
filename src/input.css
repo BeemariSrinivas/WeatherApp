@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+@layer components{
+    .button-backgrounds{
+        background-color: #FFE1E0;
+    }
+}

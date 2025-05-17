@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta description="A weather forecast application built using JavaScript, HTML, Tailwind CSS, and the OpenWeatherMap API. It provides weather information based on city input or the user's current location and includes a 5-day extended forecast.">
+    <link href="index.css" rel="stylesheet">
     <link href="./src/output.css" rel="stylesheet">
     <title>Weather App</title>
 </head>
 <body class="font-serif" style="background-color: #9B7EBD">
+    <!--section to take input from the user-->
     <section class="main p-3 text-center md:text-3xl lg:text-lg">
         <h1 class="text-6xl font-extrabold m-2" style="color: #F49BAB;">Current Weather Report</h1>
         <form id="form" class="border-2 p-3 flex flex-col bg-auto">
@@ -16,15 +18,16 @@
                 <input type="text" name="city_name" id="cityName" placeholder="Enter the city name here" class="bg-gray-200 rounded-xl p-1 mx-1">
             </div>
             <div class="flex flex-col justify-center items-center">
-                <button id="submit" class="m-1 p-1 rounded-xl " style="background-color:#FFE1E0">Search</button>
+                <button id="submit" class="button-backgrounds m-1 p-1 rounded-xl hover:bg-orange-200 hover:scale-125">Search</button>
                 <select id="options" class="bg-gray-200 rounded-xl p-1 m-1 flex flex-col w-fit">
                     <option value="" disabled selected>Choose from previous searches</option>
             </select>
                 <p class="my-1">-----------------OR-----------------</p>
-                <button id="currentLocation" class="mt-1 bg-green-200 p-1 rounded-2xl" style="background-color:#FFE1E0">Get Weather Using Current Location</button>
+                <button id="currentLocation" class="button-backgrounds mt-1 p-1 rounded-2xl hover:bg-orange-200 hover:scale-125">Get Weather Using Current Location</button>
             </div>
         </form>
     </section>
+    <!--section to display weather data to the user-->
     <section id="weatherDisplay" class="m-3 p-3">
     </section>
     <script src="index.js"></script>
