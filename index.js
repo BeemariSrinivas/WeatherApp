@@ -10,6 +10,10 @@ document.getElementById("submit").addEventListener("click",async function(){
         }
     }
     const cityName=document.getElementById("cityName").value;
+    if(cityName===""){
+        alert("Empty Values are not allowed, Please enter a city name");
+        return;
+    }
     const apiKey = "90930fa161303e19b2e7c87ff23f8e74";
     try{
         const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`);
@@ -18,7 +22,9 @@ document.getElementById("submit").addEventListener("click",async function(){
         display(weatherData);
     }
     catch(error){
-        console.log(error);
+        alert("Invalid City Name, Please try again with correct city name");
+        document.getElementById("form").reset();
+        return;
     }
 });
 document.getElementById("currentLocation").addEventListener("click",async function(){
@@ -39,16 +45,20 @@ document.getElementById("currentLocation").addEventListener("click",async functi
                 display(weatherData);
             }
             catch(error){
-                console.log(error);
+                alert("Error obtaining Weather Data,Please try again");
+                return;
             }
         },
     (error)=>{
-        console.log("Error otaining loaction", error);
+        alert("Error obtaining loaction");
+        return;
     });
     }
     else{
-        console.log("Geolocation is not supported by the browser");
+        alert("Geolocation is not supported by the browser");
+        return;
     }
+    document.getElementById("form").reset();
 });
 
 function display(weatherData){
@@ -56,6 +66,7 @@ function display(weatherData){
         fiveDayForecast = fiveDayForecast.filter((ele,index)=>index%8===0);
         console.log(fiveDayForecast);
         const container = document.createElement("div");
+        container.className = "flex flex-col justify-center items-center md:grid md:grid-rows-3 md:grid-cols-2 lg:grid lg:grid-rows-2 lg:grid-cols-4";
         fiveDayForecast.forEach(element => {
             let dateValue = element.dt_txt.split(" ")[0];
             let temperatureValue = element.main.temp;
@@ -65,6 +76,13 @@ function display(weatherData){
             let windValue = element.wind.speed;
             let humidityValue = element.main.humidity;
             const card = document.createElement("div");
+            let today = new Date();
+            if(dateValue.split("-")[2]==today.getDate()){
+                card.className = "bg-blue-200 my-2 p-3 md:col-span-2 lg:col-span-4";
+            }
+            else{
+                card.className = "my-2 p-3 bg-slate-200 md:m-2";
+            }
             const date = document.createElement("p");
             const image = document.createElement("img");
             const temprature = document.createElement("p");
@@ -87,4 +105,5 @@ function display(weatherData){
             container.appendChild(card);
         });
         document.getElementById("weatherDisplay").append(container);
+        document.getElementById("form").reset();
 }

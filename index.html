@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="index.css" rel="stylesheet">
+    <link href="./src/output.css" rel="stylesheet">
     <title>Document</title>
 </head>
-<body>
-    <section class="main">
-        <form id="form">
-            <label for="city_name">City Name please</label>
-            <input type="text" name="city_name" id="cityName" placeholder="Enter the city name here">
-            <button id="submit">Submit</button>
-            <br>
-            <button id="currentLocation">Current Location</button>
+<body class="font-serif" style="background-color: #9B7EBD">
+    <section class="main p-3 text-center md:text-3xl lg:text-lg">
+        <h1 class="text-6xl font-extrabold m-2" style="color: #F49BAB;">Current Weather Report</h1>
+        <form id="form" class="border-2 p-3 flex flex-col bg-auto">
+            <div class="m-1 flex justify-center items-center">
+                <label for="cityName" class="mx-1 font-bold">City Name:</label>
+                <input type="text" name="city_name" id="cityName" placeholder="Enter the city name here" class="bg-gray-200 rounded-xl p-1 mx-1">
+            </div>
+            <div class="flex flex-col justify-center items-center">
+                <button id="submit" class="m-1 p-1 rounded-xl" style="background-color:#FFE1E0">Search</button>
+                <p class="my-1">-----------------OR-----------------</p>
+                <button id="currentLocation" class="mt-1 bg-green-200 p-1 rounded-2xl" style="background-color:#FFE1E0">Get Weather Using Current Location</button>
+            </div>
         </form>
     </section>
-    <section id="weatherDisplay">
+    <section id="weatherDisplay" class="m-3 p-3">
     </section>
     <script src="index.js"></script>
 </body>
