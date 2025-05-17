@@ -2,38 +2,78 @@ document.getElementById("form").addEventListener("submit",function(event){
     event.preventDefault();
 });
 
-document.getElementById("submit").addEventListener("click",async function(){
-    const containerChild = document.getElementById("weatherDisplay");
-    if (containerChild) {
-        while (containerChild.firstChild) {
-            containerChild.removeChild(containerChild.firstChild);
-        }
+let saved = [];
+const searchedCities = localStorage.getItem("searches");
+if(searchedCities!==null){
+    try {
+       saved =  JSON.parse(searchedCities);
+    } catch (error) {
+        console.log(error);
     }
-    const cityName=document.getElementById("cityName").value;
+}
+else{
+    saved = [];
+}
+
+
+
+window.onload = () => {
+  if (saved.length > 0) {
+    const dropDown = document.getElementById("options");
+    saved.forEach(city => {
+      const option = document.createElement("option");
+      option.value = city;
+      option.textContent = city;
+      dropDown.appendChild(option);
+    });
+  }
+};
+
+
+
+document.getElementById("submit").addEventListener("click",async function(){
+    clear();
+    const cityName=document.getElementById("cityName").value.toLowerCase().trim();
     if(cityName===""){
         alert("Empty Values are not allowed, Please enter a city name");
         return;
     }
-    const apiKey = "90930fa161303e19b2e7c87ff23f8e74";
-    try{
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`);
-        const weatherData = await response.json();
-        //console.log(weatherData.list);
-        display(weatherData);
-    }
-    catch(error){
-        alert("Invalid City Name, Please try again with correct city name");
-        document.getElementById("form").reset();
-        return;
+    else{
+        const apiKey = "90930fa161303e19b2e7c87ff23f8e74";
+        try{
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`);
+            const weatherData = await response.json();
+            //console.log(weatherData.list);
+            if(weatherData.cod!=="200"){
+                alert("Invalid City Name, Please try again with correct city name");
+                document.getElementById("form").reset();
+                return;
+            }
+            else{
+                display(weatherData);
+                const lowerSaved = saved.map(c => c.toLowerCase());
+                if (!lowerSaved.includes(cityName.toLowerCase())) {
+                    const dropDown = document.getElementById("options");
+                    const option = document.createElement("option");
+                    option.value = cityName;
+                    option.textContent = cityName;
+                    dropDown.appendChild(option);
+                    saved.push(cityName);
+                    localStorage.setItem("searches", JSON.stringify(saved));
+                }
+            }
+        }
+        catch(error){
+            alert("Invalid City Name, Please try again with correct city name");
+        }
+        finally{
+            document.getElementById("form").reset();
+            return;
+        }
     }
 });
 document.getElementById("currentLocation").addEventListener("click",async function(){
-    const containerChild = document.getElementById("weatherDisplay");
-    if (containerChild) {
-        while (containerChild.firstChild) {
-            containerChild.removeChild(containerChild.firstChild);
-        }
-    }
+    clear();
     const apiKey = "90930fa161303e19b2e7c87ff23f8e74";
     if("geolocation" in navigator){
         navigator.geolocation.getCurrentPosition(async(position)=>{
@@ -48,6 +88,10 @@ document.getElementById("currentLocation").addEventListener("click",async functi
                 alert("Error obtaining Weather Data,Please try again");
                 return;
             }
+            finally{
+                document.getElementById("form").reset();
+                return;
+            }
         },
     (error)=>{
         alert("Error obtaining loaction");
@@ -58,8 +102,33 @@ document.getElementById("currentLocation").addEventListener("click",async functi
         alert("Geolocation is not supported by the browser");
         return;
     }
-    document.getElementById("form").reset();
 });
+
+document.getElementById("options").addEventListener("change",async function(event){
+    clear();
+    const city = event.target.value;
+    const apiKey = "90930fa161303e19b2e7c87ff23f8e74";
+    try{
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
+            const weatherData = await response.json();
+            display(weatherData);
+        }
+        catch(error){
+            alert("An error occured, Please try again");
+            document.getElementById("form").reset();
+            return;
+        }
+});
+
+function clear(){
+    const containerChild = document.getElementById("weatherDisplay");
+    if (containerChild) {
+        while (containerChild.firstChild) {
+            containerChild.removeChild(containerChild.firstChild);
+        }
+    }
+}
+
 
 function display(weatherData){
     let fiveDayForecast = weatherData.list;
