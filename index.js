@@ -146,7 +146,8 @@ function display(weatherData){
             let humidityValue = element.main.humidity;
             const card = document.createElement("div");
             let today = new Date();
-            if(dateValue.split("-")[2]==today.getDate()){
+            let todayDate = today.toISOString().split("T")[0];
+            if (dateValue === todayDate) {
                 card.className = "bg-blue-200 my-2 p-3 md:col-span-2 lg:col-span-4";
             }
             else{
